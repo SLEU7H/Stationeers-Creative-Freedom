@@ -39,139 +39,116 @@ And Inaki's exercises!
 
 namespace StationeersCreativeFreedom
 {
-
     #region Structure
-
     [HarmonyPatch(typeof(Structure), "Awake")]
     internal class Structure_Awake_Patch
     {
-        [UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
-        private static void Postfix(Structure __instance)
+        [HarmonyPostfix]
+        //[UsedImplicitly]//dunno what is for, something for simpler replacing of the field values.
+        public static void Postfix(Structure __instance)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            {
-                __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
-                __instance.AllowedRotations = AllowedRotations.All;
-            }
+            __instance.RotationAxis = RotationAxis.All; //thanks for Kamuchi for idea of using the named enumerator values
+            __instance.AllowedRotations = AllowedRotations.All;
             //TODO key switcher to change precisement of constructions
             //__instance.GridSize = 0.5f; 
             //__instance.PlacementType = PlacementSnap.Grid;
         }
     }
-
+    /*OLD CODE
     [HarmonyPatch(typeof(Structure), "CanConstruct")]
-    internal class Structure_CanConstruct_Patch
+    public class CanConstructInfo_Patch
     {
-        private static void Postfix(ref bool __result)
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        public static void Postfix(Structure __instance, CanConstructInfo __result)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; }
+            if (__instance.PlacementType == PlacementSnap.Grid)
+            {
+                __result = CanConstructInfo.ValidPlacement;
+                return true;
+            }
+        }
+    }*/
+
+    [HarmonyPatch(typeof(CanConstructInfo), "InvalidPlacement")]
+    public class CanConstructInfo_InvalidPlacement_Patch
+    {
+        [HarmonyPostfix]
+        //[UsedImplicitly]
+        public static void Postfix(ref CanConstructInfo __result)
+        {
+
+            __result = new CanConstructInfo(true, string.Empty);
         }
     }
-
 
     #endregion Structure
 
     #region SmallGrid
-
-    [HarmonyPatch(typeof(SmallGrid), "CanConstruct")]
-    internal class SmallGrid_CanConstruct_Patch
-    {
-        private static void Postfix(ref bool __result)
-        {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; }
-        }
-    }
-
     [HarmonyPatch(typeof(SmallGrid), "_IsCollision")]
-    internal class SmallGrid_isCollision_Patch
+    public class SmallGrid_isCollision_Patch
     {
-        private static bool Prefix()
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        public static bool Prefix()
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { return false; }
-            return true;
+            return false;
         }
     }
 
     [HarmonyPatch(typeof(SmallGrid), "HasFrameBelow")]
-    internal class SmallGrid_HasFrameBelow_Patch
+    public class SmallGrid_HasFrameBelow_Patch
     {
-        private static void Postfix(ref bool __result)
+        [HarmonyPostfix]
+        //[UsedImplicitly]
+        public static void Postfix(ref bool __result)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; }
+            __result = true;
         }
     }
 
     [HarmonyPatch(typeof(SmallGrid), "HasVoxelBelow")]
-    internal class SmallGrid_HasVoxelBelow_Patch
+    public class SmallGrid_HasVoxelBelow_Patch
     {
-        private static void Postfix(ref bool __result)
+        [HarmonyPostfix]
+        //[UsedImplicitly]
+        public static void Postfix(ref bool __result)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; }
+            __result = true;
         }
     }
 
-    [HarmonyPatch(typeof(SmallGrid), "CanMountOnWall")]
-    internal class SmallGrid_CanMountOnWall_Patch
-    {
-        private static void Postfix(ref Structure.CanMountResult __result)
-        {
-            __result.result = Structure.WallMountResult.Valid;
-        }
-        //thanks to the TurkeyKittin.
-    }
-
-    [HarmonyPatch(typeof(MountedSmallGrid), "CanConstruct")]
-    internal class MountedSmallGrid_CanConstruct_Patch
-    {
-        private static void Postfix(ref bool __result)
-        {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; }
-        }
-    }
     #endregion SmallGrid
-    
+
     #region Devices
-    [HarmonyPatch(typeof(Airlock), "CanConstruct")]
-    internal class Airlock_CanConstruct_Patch
+
+    /*[HarmonyPatch(typeof(Airlock), "CheckSidesBlocked")]
+    public class Airlock_CheckSidesBlocked_Patch
     {
-        private static void Postfix(ref bool __result)
+        [HarmonyPostfix]
+        //[UsedImplicitly]
+        public static void Postfix(ref bool __result)
         {
-            if (WorldManager.Instance.GameMode == GameMode.Creative)
-            { __result = true; } //evading of CheckSidesBlocked
+            __result = true; //evading of CheckSidesBlocked
         }
-    }
+    }*/
+
     #endregion
 
     #region DynamicThing
- 
-    #endregion DynamicThing
 
+    #endregion DynamicThing
 
     #region Items
 
     #endregion
 
-  
-
     #region Mothership
-    //[HarmonyPatch(typeof(Mothership), "FixedUpdateEachFrame")]
-    //internal class Mothership_OnThreadUpdate_Patch
-    //{
-    //    [UsedImplicitly]
-    //    private static void Prefix(Mothership __instance, ref bool ____isRotationDeviated)
-    //    {
-    //        ____isRotationDeviated = false;
-    //    }
-    //}
+
     #endregion
 
     #region Entity
 
     #endregion Entity
+
 }
