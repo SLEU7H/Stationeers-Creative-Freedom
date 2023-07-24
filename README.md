@@ -28,7 +28,7 @@ More things for breaking free...
 Installation
 =============
 1. Download last stable (I hope) release of compiled mod:
-https://github.com/Kastuk/Stationeers-Creative-Freedom/releases
+https://github.com/SLEU7H/Stationeers-Creative-Freedom/releases
 2. Download last stable BepInEx release:
 https://github.com/BepInEx/BepInEx/releases
 3. Unpack it into SteamLibrary\steamapps\common\Stationeers folder
