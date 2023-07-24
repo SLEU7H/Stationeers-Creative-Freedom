@@ -1,6 +1,5 @@
 # Stationeers-Creative-Freedom
 Break the limits of creativity!
-My first attempt for hardmodding the Unity game.
 
 Breaks:
 * Limits of construction for big and small grid objects.
